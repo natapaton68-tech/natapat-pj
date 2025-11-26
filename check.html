@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการนักเรียนและการเข้าเรียน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-neutral-900 to-neutral-800 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-gradient-to-r from-red-600 to-red-900 shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <h1 class="text-white text-2xl font-bold">📚 ระบบจัดการการเข้าเรียน</h1>
+                <div class="flex gap-4">
+                    <button onclick="switchTab('students')" class="tab-btn active px-4 py-2 rounded-lg text-white font-semibold hover:bg-red-700 transition">นักเรียน</button>
+                    <button onclick="switchTab('attendance')" class="tab-btn px-4 py-2 rounded-lg text-white font-semibold hover:bg-red-700 transition">บันทึกการเข้าเรียน</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Students Section -->
+        <div id="students-section" class="tab-content">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Add Student Form -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-3xl shadow-2xl p-8 border-2 border-red-600">
+                        <h2 class="text-white text-2xl font-bold mb-6 text-center">➕ เพิ่มนักเรียน</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-red-500 font-bold text-sm uppercase mb-2">ชื่อ-นามสกุล</label>
+                                <input type="text" id="studentName" placeholder="กรุณากรอกชื่อ" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                            </div>
+
+                            <div>
+                                <label class="block text-red-500 font-bold text-sm uppercase mb-2">ห้อง</label>
+                                <input type="text" id="studentRoom" placeholder="เช่น 1/1" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                            </div>
+
+                            <div>
+                                <label class="block text-red-500 font-bold text-sm uppercase mb-2">วิชา</label>
+                                <input type="text" id="studentSubject" placeholder="เช่น คณิตศาสตร์" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                            </div>
+
+                            <div>
+                                <label class="block text-red-500 font-bold text-sm uppercase mb-2">Face Data (หากมี)</label>
+                                <input type="text" id="studentFaceData" placeholder="Optional" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                            </div>
+
+                            <button onclick="addStudent()" class="w-full bg-gradient-to-br from-red-600 to-red-900 text-white font-bold py-3 rounded-lg hover:from-red-700 hover:to-red-950 transition shadow-lg">บันทึกนักเรียน</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Students List -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-3xl shadow-2xl p-8 border-2 border-red-600">
+                        <h2 class="text-white text-2xl font-bold mb-6">👥 รายชื่อนักเรียน</h2>
+                        
+                        <div id="studentsList" class="space-y-3 max-h-96 overflow-y-auto">
+                            <p class="text-gray-400 text-center py-8">ไม่มีข้อมูลนักเรียน</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Section -->
+        <div id="attendance-section" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Record Attendance Form -->
+                <div class="lg:col-span-1">
+                    <div class="bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-3xl shadow-2xl p-8 border-2 border-red-600">
+                        <h2 class="text-white text-2xl font-bold mb-6 text-center">✏️ บันทึกการเข้าเรียน</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-red-500 font-bold text-sm uppercase mb-2">ชื่อ-นามสกุล</label>
+                                <input type="text" id="attendanceName" placeholder="กรุณากรอกชื่อ" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                            </div>
+
+                            <div>
+                                <label class="block text-red-500 font-bold text-sm uppercase mb-2">วันที่</label>
+                                <input type="date" id="attendanceDate" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                            </div>
+
+                            <div>
+                                <label class="block text-red-500 font-bold text-sm uppercase mb-2">เวลา</label>
+                                <input type="time" id="attendanceTime" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                            </div>
+
+                            <button onclick="recordAttendance()" class="w-full bg-gradient-to-br from-red-600 to-red-900 text-white font-bold py-3 rounded-lg hover:from-red-700 hover:to-red-950 transition shadow-lg">บันทึกการเข้าเรียน</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Attendance Records -->
+                <div class="lg:col-span-2">
+                    <div class="bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-3xl shadow-2xl p-8 border-2 border-red-600">
+                        <h2 class="text-white text-2xl font-bold mb-6">📋 บันทึกการเข้าเรียน</h2>
+                        
+                        <div id="attendanceList" class="space-y-3 max-h-96 overflow-y-auto">
+                            <p class="text-gray-400 text-center py-8">ไม่มีบันทึกการเข้าเรียน</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Settings -->
+        <div class="mt-12 bg-gradient-to-br from-neutral-950 to-neutral-900 rounded-3xl shadow-2xl p-8 border-2 border-red-600">
+            <h2 class="text-white text-xl font-bold mb-4">⚙️ ตั้งค่า API</h2>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-red-500 font-bold text-sm uppercase mb-2">Sheet ID</label>
+                    <input type="text" id="sheetId" placeholder="กรุณากรอก Google Sheet ID" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                </div>
+                <div>
+                    <label class="block text-red-500 font-bold text-sm uppercase mb-2">API URL</label>
+                    <input type="text" id="apiUrl" placeholder="URL ของ Google Apps Script" class="w-full px-4 py-2 rounded-lg bg-neutral-800 text-white border border-red-600 focus:outline-none focus:border-red-400">
+                </div>
+                <button onclick="loadStudents()" class="bg-gradient-to-br from-red-600 to-red-900 text-white font-bold py-2 px-6 rounded-lg hover:from-red-700 hover:to-red-950 transition">โหลดข้อมูล</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local data storage
+        let students = [];
+        let attendance = [];
+
+        // Switch between tabs
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(tab + '-section').classList.remove('hidden');
+            
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Add student
+        function addStudent() {
+            const name = document.getElementById('studentName').value.trim();
+            const room = document.getElementById('studentRoom').value.trim();
+            const subject = document.getElementById('studentSubject').value.trim();
+            const faceData = document.getElementById('studentFaceData').value.trim();
+
+            if (!name || !room || !subject) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            const student = {
+                name,
+                room,
+                subject,
+                faceData,
+                timestamp: new Date().toISOString()
+            };
+
+            students.push(student);
+            renderStudents();
+            
+            // Clear form
+            document.getElementById('studentName').value = '';
+            document.getElementById('studentRoom').value = '';
+            document.getElementById('studentSubject').value = '';
+            document.getElementById('studentFaceData').value = '';
+            
+            alert('บันทึกนักเรียนสำเร็จ');
+        }
+
+        // Render students list
+        function renderStudents() {
+            const list = document.getElementById('studentsList');
+            
+            if (students.length === 0) {
+                list.innerHTML = '<p class="text-gray-400 text-center py-8">ไม่มีข้อมูลนักเรียน</p>';
+                return;
+            }
+
+            list.innerHTML = students.map((student, index) => `
+                <div class="bg-neutral-800 p-4 rounded-lg border border-red-600/30 hover:border-red-600 transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-red-500 font-bold">${student.name}</p>
+                            <p class="text-gray-400 text-sm">ห้อง: ${student.room} | วิชา: ${student.subject}</p>
+                            ${student.faceData ? `<p class="text-gray-500 text-xs mt-1">Face Data: ${student.faceData}</p>` : ''}
+                        </div>
+                        <button onclick="removeStudent(${index})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">ลบ</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Remove student
+        function removeStudent(index) {
+            if (confirm('ต้องการลบนักเรียนคนนี้หรือไม่?')) {
+                students.splice(index, 1);
+                renderStudents();
+            }
+        }
+
+        // Record attendance
+        function recordAttendance() {
+            const name = document.getElementById('attendanceName').value.trim();
+            const date = document.getElementById('attendanceDate').value;
+            const time = document.getElementById('attendanceTime').value;
+
+            if (!name || !date || !time) {
+                alert('กรุณากรอกข้อมูลให้ครบถ้วน');
+                return;
+            }
+
+            const record = {
+                name,
+                date,
+                time,
+                timestamp: new Date().toISOString()
+            };
+
+            attendance.push(record);
+            renderAttendance();
+            
+            // Clear form
+            document.getElementById('attendanceName').value = '';
+            document.getElementById('attendanceDate').value = '';
+            document.getElementById('attendanceTime').value = '';
+            
+            alert('บันทึกการเข้าเรียนสำเร็จ');
+        }
+
+        // Render attendance list
+        function renderAttendance() {
+            const list = document.getElementById('attendanceList');
+            
+            if (attendance.length === 0) {
+                list.innerHTML = '<p class="text-gray-400 text-center py-8">ไม่มีบันทึกการเข้าเรียน</p>';
+                return;
+            }
+
+            list.innerHTML = attendance.map((record, index) => `
+                <div class="bg-neutral-800 p-4 rounded-lg border border-red-600/30 hover:border-red-600 transition">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-red-500 font-bold">${record.name}</p>
+                            <p class="text-gray-400 text-sm">วันที่: ${record.date} | เวลา: ${record.time}</p>
+                        </div>
+                        <button onclick="removeAttendance(${index})" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm">ลบ</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Remove attendance record
+        function removeAttendance(index) {
+            if (confirm('ต้องการลบบันทึกนี้หรือไม่?')) {
+                attendance.splice(index, 1);
+                renderAttendance();
+            }
+        }
+
+        // Load students from API
+        async function loadStudents() {
+            const sheetId = document.getElementById('sheetId').value.trim();
+            const apiUrl = document.getElementById('apiUrl').value.trim();
+
+            if (!sheetId || !apiUrl) {
+                alert('กรุณากรอก Sheet ID และ API URL');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${apiUrl}?action=getStudents&sheetId=${sheetId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    students = data.students || [];
+                    renderStudents();
+                    alert('โหลดข้อมูลสำเร็จ');
+                } else {
+                    alert('เกิดข้อผิดพลาด: ' + data.message);
+                }
+            } catch (error) {
+                alert('ไม่สามารถเชื่อมต่อ API: ' + error.message);
+            }
+        }
+
+        // Set default date to today
+        window.addEventListener('load', function() {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('attendanceDate').value = today;
+        });
+    </script>
+</body>
+</html>
